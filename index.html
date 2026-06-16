@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>มะขามหลวง ลำไย คอนเนค (MakhamLuang Longan Connect)</title>
+    
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Custom Style CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body class="dark-theme"> <!-- Default dark-theme -->
+
+    <div class="app-container">
+        
+        <!-- App Header -->
+        <header class="app-header">
+            <div class="header-main">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>ลำไย มะขามหลวง</h1>
+                        <p>ต.มะขามหลวง อ.สันป่าตอง จ.เชียงใหม่</p>
+                    </div>
+                </div>
+                
+                <!-- Theme Switcher -->
+                <button id="theme-toggle" class="theme-btn" aria-label="เปลี่ยนธีม">
+                    <!-- Sun Icon (shown in dark theme) -->
+                    <svg class="sun-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <!-- Moon Icon (shown in light theme) -->
+                    <svg class="moon-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Real-time Banner / Broadcast Notifications -->
+            <div id="urgent-broadcast" class="urgent-banner hidden">
+                <div class="banner-content">
+                    <span class="badge badge-alert">ประกาศด่วน</span>
+                    <span class="banner-text" id="broadcast-text">ล้งรุ่งเรืองการค้า (ม.3) เปิดรับซื้อเกรด AA ด่วน! เพิ่มราคาพิเศษกิโลละ +2 บาท</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main class="app-main-content">
+            
+            <!-- SECTION 1: PRICES TAB (DEFAULT) -->
+            <section id="tab-prices" class="tab-panel active">
+                <!-- Market Summary Grid -->
+                <div class="market-summary-grid">
+                    <div class="summary-card" data-grade="AA">
+                        <div class="card-header">เกรด AA (ราคากลาง)</div>
+                        <div class="card-price"><span id="avg-aa">--</span> <span class="unit">บาท/กก.</span></div>
+                        <div class="card-change up"><span class="change-icon">▲</span> +1.5 บ.</div>
+                    </div>
+                    <div class="summary-card" data-grade="A">
+                        <div class="card-header">เกรด A (ราคากลาง)</div>
+                        <div class="card-price"><span id="avg-a">--</span> <span class="unit">บาท/กก.</span></div>
+                        <div class="card-change up"><span class="change-icon">▲</span> +1.0 บ.</div>
+                    </div>
+                    <div class="summary-card" data-grade="B">
+                        <div class="card-header">เกรด B (ราคากลาง)</div>
+                        <div class="card-price"><span id="avg-b">--</span> <span class="unit">บาท/กก.</span></div>
+                        <div class="card-change steady"><span class="change-icon">■</span> คงที่</div>
+                    </div>
+                    <div class="summary-card" data-grade="C">
+                        <div class="card-header">เกรด C (ราคากลาง)</div>
+                        <div class="card-price"><span id="avg-c">--</span> <span class="unit">บาท/กก.</span></div>
+                        <div class="card-change down"><span class="change-icon">▼</span> -0.5 บ.</div>
+                    </div>
+                </div>
+                
+                <!-- Search & Filters -->
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="search-lhong" placeholder="ค้นหาชื่อล้ง หรือหมู่บ้าน...">
+                    </div>
+                    <div class="sort-options">
+                        <label for="sort-select">เรียงลำดับ:</label>
+                        <select id="sort-select">
+                            <option value="distance">ระยะทาง (ใกล้สุด)</option>
+                            <option value="price-aa">ราคา AA (สูงสุด)</option>
+                            <option value="price-a">ราคา A (สูงสุด)</option>
+                            <option value="open-status">สถานะร้าน (เปิดรับซื้อ)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Lhong List Container -->
+                <div class="lhong-list-header">
+                    <h2>จุดรับซื้อทั้งหมดในตำบล (ล้งลำไย)</h2>
+                    <span class="lhong-count" id="lhong-count">0 แห่ง</span>
+                </div>
+                
+                <div id="lhong-cards-container" class="lhong-cards-list">
+                    <!-- Cards will be dynamically inserted here by JS -->
+                </div>
+            </section>
+            
+            <!-- SECTION 2: MAP TAB -->
+            <section id="tab-map" class="tab-panel">
+                <div class="map-view-wrapper">
+                    <!-- Floating Map Legend & Control -->
+                    <div class="map-overlay-card">
+                        <h3>แผนที่จุดรับซื้อ ต.มะขามหลวง</h3>
+                        <p class="map-desc">แสดงล้งรับซื้อลำไยพร้อมราคากลางแบบเรียลไทม์ กดที่หมุดเพื่อนำทาง</p>
+                        <div class="legend-items">
+                            <div class="legend-item"><span class="legend-dot dot-open"></span> ล้งที่เปิดรับซื้อ</div>
+                            <div class="legend-item"><span class="legend-dot dot-best"></span> ล้งที่ให้ราคาสูงสุดวันนี้</div>
+                            <div class="legend-item"><span class="legend-dot dot-closed"></span> ปิดรับซื้อชั่วคราว</div>
+                        </div>
+                    </div>
+                    <div id="map-container"></div>
+                </div>
+            </section>
+            
+            <!-- SECTION 3: AI SCANNER TAB -->
+            <section id="tab-scanner" class="tab-panel">
+                <div class="scanner-container">
+                    <div class="panel-header">
+                        <h2>AI Computer Vision ประเมินเกรดผลผลิต</h2>
+                        <p>ถ่ายรูปหรือคลิกเลือกตัวอย่างลำไย เพื่อให้ AI คาดการณ์เกรดเบื้องต้นเพื่อใช้ต่อรองราคากับล้ง</p>
+                    </div>
+
+                    <!-- Scanner Screen View -->
+                    <div class="scanner-screen-wrapper">
+                        <div class="scanner-view-frame">
+                            <img id="scanner-preview-img" src="" alt="คลิกเลือกรูปภาพตัวอย่างด้านล่างเพื่อเริ่มสแกน" class="hidden">
+                            <div id="scanner-placeholder" class="scanner-placeholder">
+                                <div class="placeholder-icon">
+                                    <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                </div>
+                                <p>เลือกภาพตัวอย่างลำไยด้านล่าง</p>
+                                <p class="sub-text">เพื่อเริ่มการวิเคราะห์จำลองของ AI</p>
+                            </div>
+                            
+                            <!-- Scanner Overlay Graphics -->
+                            <div id="scanner-overlay" class="scanner-overlay hidden">
+                                <div class="scanning-bar"></div>
+                                <div class="target-corners">
+                                    <div class="corner top-left"></div>
+                                    <div class="corner top-right"></div>
+                                    <div class="corner bottom-left"></div>
+                                    <div class="corner bottom-right"></div>
+                                </div>
+                                <div class="scanning-status">กำลังสแกนวิเคราะห์ผล...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Demo Image Selectors -->
+                    <div class="demo-selector-section">
+                        <h3>เลือกภาพลำไยตัวอย่างเพื่อทดสอบระบบ:</h3>
+                        <div class="demo-images-grid">
+                            <button class="demo-img-btn" data-grade="aa" data-img="assets/longan_aa.png">
+                                <div class="demo-img-crop">
+                                    <img src="assets/longan_aa.png" alt="เกรด AA">
+                                </div>
+                                <div class="btn-label">ตัวอย่าง AA (ผลใหญ่ผิวสวย)</div>
+                            </button>
+                            <button class="demo-img-btn" data-grade="a" data-img="assets/longan_a.png">
+                                <div class="demo-img-crop">
+                                    <img src="assets/longan_a.png" alt="เกรด A">
+                                </div>
+                                <div class="btn-label">ตัวอย่าง A (ขนาดมาตรฐาน)</div>
+                            </button>
+                            <button class="demo-img-btn" data-grade="b" data-img="assets/longan_b.png">
+                                <div class="demo-img-crop">
+                                    <img src="assets/longan_b.png" alt="เกรด B">
+                                </div>
+                                <div class="btn-label">ตัวอย่าง B (ขนาดคละกัน)</div>
+                            </button>
+                            <button class="demo-img-btn" data-grade="c" data-img="assets/longan_c.png">
+                                <div class="demo-img-crop">
+                                    <img src="assets/longan_c.png" alt="เกรด C">
+                                </div>
+                                <div class="btn-label">ตัวอย่าง C (ผลเล็กมีตำหนิ)</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scanner Results Area -->
+                    <div id="scanner-result-panel" class="scanner-result-card hidden">
+                        <div class="result-header">
+                            <span class="result-badge">ผลลัพธ์การคัดเกรดโดย AI</span>
+                            <h3 id="result-grade-title">เกรดแนะนำ: AA</h3>
+                        </div>
+                        
+                        <div class="result-body">
+                            <div class="result-metrics">
+                                <div class="metric-item">
+                                    <span class="metric-label">ขนาดผลเฉลี่ย</span>
+                                    <span class="metric-value" id="metric-size">2.95 ซม.</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">ความสม่ำเสมอผิว</span>
+                                    <span class="metric-value" id="metric-skin">94% (สมบูรณ์ดี)</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">อัตราเนื้อผล</span>
+                                    <span class="metric-value" id="metric-flesh">78% (หนาแน่น)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="price-estimate-box">
+                                <div class="est-label">ราคากลางคาดการณ์วันนี้:</div>
+                                <div class="est-price"><span id="result-est-price">32-34</span> บาท/กก.</div>
+                                <p class="est-note">*อิงตามราคาสูงสุดของล้งที่ใกล้เคียงคุณ</p>
+                            </div>
+                            
+                            <div class="result-actions">
+                                <button id="btn-find-best-deal" class="btn btn-primary btn-block">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                    เปรียบเทียบล้งที่ให้ราคาสูงสุด
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 4: AI FORECAST TAB -->
+            <section id="tab-forecast" class="tab-panel">
+                <div class="forecast-container">
+                    <div class="panel-header">
+                        <h2>AI Predictive Analytics วิเคราะห์ราคารับซื้อล่วงหน้า</h2>
+                        <p>ใช้ข้อมูลปริมาณผลผลิตในตลาดและราคาย้อนหลังเพื่อช่วยวางแผนกำหนดวันเก็บเกี่ยวที่ดีที่สุด</p>
+                    </div>
+
+                    <!-- Harvest Recommendation Card -->
+                    <div class="recommendation-card">
+                        <div class="rec-icon">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                            </svg>
+                        </div>
+                        <div class="rec-details">
+                            <h3>คำแนะนำการเก็บเกี่ยวของวันนี้</h3>
+                            <p id="forecast-recommendation">กำลังคำนวณสถิติและวิเคราะห์แนวโน้ม...</p>
+                        </div>
+                    </div>
+
+                    <!-- Forecast Controls -->
+                    <div class="forecast-controls">
+                        <span class="control-label">สลับเกรดเพื่อดูทิศทางราคา:</span>
+                        <div class="grade-toggle-group">
+                            <button class="grade-toggle-btn active" data-forecast-grade="AA">AA</button>
+                            <button class="grade-toggle-btn" data-forecast-grade="A">A</button>
+                            <button class="grade-toggle-btn" data-forecast-grade="B">B</button>
+                            <button class="grade-toggle-btn" data-forecast-grade="C">C</button>
+                        </div>
+                    </div>
+
+                    <!-- Forecast Chart Wrapper -->
+                    <div class="chart-wrapper-card">
+                        <div class="chart-header">
+                            <h3 id="chart-title">แนวโน้มราคาเกรด AA (ย้อนหลัง 30 วัน & พยากรณ์ล่วงหน้า 7 วัน)</h3>
+                            <span class="data-source-badge">โมเดล AI ล่าสุด</span>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="priceForecastChart"></canvas>
+                        </div>
+                        <div class="chart-info-footer">
+                            <p>* เส้นทึบแสดงราคาจริงย้อนหลัง เส้นประแสดงราคาพยากรณ์จากแบบจำลอง AI (Machine Learning)</p>
+                        </div>
+                    </div>
+
+                    <!-- Price Trend Analysis Table -->
+                    <div class="trend-table-card">
+                        <h3>พยากรณ์ราคา 7 วันข้างหน้า (บาท/กิโลกรัม)</h3>
+                        <div class="trend-table-responsive">
+                            <table class="trend-table">
+                                <thead>
+                                    <tr>
+                                        <th>วันที่</th>
+                                        <th>เกรด AA</th>
+                                        <th>เกรด A</th>
+                                        <th>เกรด B</th>
+                                        <th>เกรด C</th>
+                                        <th>แนวโน้ม</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="forecast-table-body">
+                                    <!-- Dynamic rows from JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 5: LHONG PORTAL TAB -->
+            <section id="tab-lhong" class="tab-panel">
+                <div class="lhong-portal-container">
+                    <div class="panel-header">
+                        <h2>แผงควบคุมร้านค้าสำหรับผู้ประกอบการ (ล้ง)</h2>
+                        <p>อัปเดตราคารับซื้อและประกาศโปรโมชันพิเศษของคุณ เพื่อแสดงบนบอร์ดราคากลางและแผนที่ทันที</p>
+                    </div>
+
+                    <!-- Portal Auth Form -->
+                    <div id="lhong-auth-card" class="portal-card">
+                        <h3>เข้าสู่ระบบควบคุมจุดรับซื้อ</h3>
+                        <form id="lhong-login-form" onsubmit="return false;">
+                            <div class="form-group">
+                                <label for="login-lhong-select">เลือกชื่อจุดรับซื้อ (ล้ง):</label>
+                                <select id="login-lhong-select" required>
+                                    <option value="" disabled selected>-- เลือกจุดรับซื้อของคุณ --</option>
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-pin">รหัส PIN 4 หลัก:</label>
+                                <input type="password" id="login-pin" maxlength="4" placeholder="กรอกรหัสผ่าน (ทดสอบพิมพ์: 1234)" required autocomplete="current-password">
+                            </div>
+                            <button type="submit" id="btn-login-submit" class="btn btn-primary btn-block">ยืนยันรหัส PIN</button>
+                            <p class="pin-hint">* ทุกร้านจำลองรหัส PIN เป็น <strong>1234</strong> สำหรับการสาธิตโปรเจกต์</p>
+                        </form>
+                    </div>
+
+                    <!-- Portal Manage Dashboard (Hidden by default) -->
+                    <div id="lhong-manage-card" class="portal-card hidden">
+                        <div class="manage-header">
+                            <div class="lhong-info">
+                                <h3 id="manage-lhong-name">ล้งเจริญการค้า</h3>
+                                <p id="manage-lhong-village">หมู่ 3 บ้านมะขามหลวง</p>
+                            </div>
+                            <button id="btn-lhong-logout" class="btn btn-outline btn-sm">ออกจากระบบ</button>
+                        </div>
+
+                        <form id="lhong-update-form" onsubmit="return false;">
+                            
+                            <!-- Status Toggle -->
+                            <div class="form-group">
+                                <label>สถานะเปิดรับซื้อในปัจจุบัน:</label>
+                                <div class="status-toggle-group">
+                                    <button type="button" class="status-btn btn-open active" data-status="open">
+                                        <span class="status-dot"></span> เปิดรับซื้อปกติ
+                                    </button>
+                                    <button type="button" class="status-btn btn-closed" data-status="closed">
+                                        <span class="status-dot"></span> ปิดรับซื้อชั่วคราว
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Price Update Grid -->
+                            <div class="price-update-group">
+                                <h4>ปรับราคารับซื้อประจำช่วงเวลานี้ (บาท/กก.)</h4>
+                                <div class="price-fields-grid">
+                                    <div class="form-group price-field">
+                                        <label for="price-input-aa">เกรด AA</label>
+                                        <input type="number" id="price-input-aa" step="0.5" min="0" required>
+                                    </div>
+                                    <div class="form-group price-field">
+                                        <label for="price-input-a">เกรด A</label>
+                                        <input type="number" id="price-input-a" step="0.5" min="0" required>
+                                    </div>
+                                    <div class="form-group price-field">
+                                        <label for="price-input-b">เกรด B</label>
+                                        <input type="number" id="price-input-b" step="0.5" min="0" required>
+                                    </div>
+                                    <div class="form-group price-field">
+                                        <label for="price-input-c">เกรด C</label>
+                                        <input type="number" id="price-input-c" step="0.5" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Promotion Broadcast Message -->
+                            <div class="form-group">
+                                <label for="lhong-promo-input">ประกาศด่วน / โปรโมชันหน้าร้าน (แสดงแถบด้านบนสุด):</label>
+                                <textarea id="lhong-promo-input" rows="2" maxlength="150" placeholder="เช่นต้องการเกรด AA ด่วน! เพิ่มราคาให้กิโลละ 2 บาท สำหรับช่วงบ่ายนี้... (เว้นว่างไว้เพื่อยกเลิกประกาศ)"></textarea>
+                            </div>
+
+                            <button type="submit" id="btn-save-lhong-changes" class="btn btn-primary btn-block">
+                                บันทึกข้อมูลและเผยแพร่แบบเรียลไทม์
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- App Navigation Bar (Bottom Navigation) -->
+        <nav class="app-navbar">
+            <button class="nav-item active" data-tab="prices">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <span>เปรียบเทียบราคา</span>
+            </button>
+            
+            <button class="nav-item" data-tab="map">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                    </svg>
+                </div>
+                <span>แผนที่ล้ง</span>
+            </button>
+            
+            <button class="nav-item" data-tab="scanner">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v1.5M21 16.5V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.5M12 9v6M9 12h6"></path>
+                    </svg>
+                </div>
+                <span>AI คัดเกรด</span>
+            </button>
+            
+            <button class="nav-item" data-tab="forecast">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <span>AI พยากรณ์</span>
+            </button>
+            
+            <button class="nav-item" data-tab="lhong">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <span>จัดการล้ง</span>
+            </button>
+        </nav>
+        
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">
+        <span id="toast-message">บันทึกข้อมูลสำเร็จ</span>
+    </div>
+
+    <!-- Custom Logic JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
