@@ -596,8 +596,42 @@ function initScannerTab() {
         });
     });
 
+    // File selection triggers
+    const cameraInput = document.getElementById("scanner-camera-input");
+    const fileInput = document.getElementById("scanner-file-input");
+    
+    document.getElementById("btn-trigger-camera").addEventListener("click", () => {
+        cameraInput.click();
+    });
+    
+    document.getElementById("btn-trigger-gallery").addEventListener("click", () => {
+        fileInput.click();
+    });
+    
+    // File change handlers
+    const handleFileSelect = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            // Deselect demo buttons
+            demoBtns.forEach(b => b.classList.remove("selected"));
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Determine a pseudo-random grade for the user uploaded image
+                const grades = ["aa", "a", "b", "c"];
+                const randomGrade = grades[Math.floor(Math.random() * grades.length)];
+                
+                startScanningSimulation(e.target.result, randomGrade, true);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    
+    cameraInput.addEventListener("change", handleFileSelect);
+    fileInput.addEventListener("change", handleFileSelect);
+
     document.getElementById("btn-find-best-deal").addEventListener("click", () => {
-        const predictedGrade = document.getElementById("result-grade-title").textContent.replace("เกรดแนะนำ: ", "").trim();
+        const predictedGrade = document.getElementById("result-grade-title").textContent.replace("เกรดแนะนำ: ", "").replace(" (ภาพของคุณ)", "").trim();
         
         // Select sorting in Prices tab based on grade
         const sortSelect = document.getElementById("sort-select");
@@ -618,7 +652,7 @@ function initScannerTab() {
     });
 }
 
-function startScanningSimulation(imgPath, grade) {
+function startScanningSimulation(imgPath, grade, isUserUploaded = false) {
     const previewImg = document.getElementById("scanner-preview-img");
     const placeholder = document.getElementById("scanner-placeholder");
     const overlay = document.getElementById("scanner-overlay");
@@ -638,11 +672,11 @@ function startScanningSimulation(imgPath, grade) {
     // Simulate AI computing process with scanning line
     setTimeout(() => {
         overlay.classList.add("hidden");
-        showScannerResults(grade);
+        showScannerResults(grade, isUserUploaded);
     }, 2500);
 }
 
-function showScannerResults(grade) {
+function showScannerResults(grade, isUserUploaded = false) {
     const resultPanel = document.getElementById("scanner-result-panel");
     const gradeTitle = document.getElementById("result-grade-title");
     const metricSize = document.getElementById("metric-size");
@@ -663,26 +697,30 @@ function showScannerResults(grade) {
 
     resultPanel.classList.remove("hidden");
     
+    const userLabel = isUserUploaded ? " (ภาพของคุณ)" : "";
+    const badgeText = isUserUploaded ? "วิเคราะห์รูปภาพของคุณเสร็จสมบูรณ์" : "ผลลัพธ์การคัดเกรดโดย AI";
+    document.querySelector(".result-badge").textContent = badgeText;
+    
     if (grade === "aa") {
-        gradeTitle.textContent = "เกรดแนะนำ: AA";
+        gradeTitle.textContent = "เกรดแนะนำ: AA" + userLabel;
         metricSize.textContent = "2.92 ซม.";
         metricSkin.textContent = "96% (ผลตึงสวย)";
         metricFlesh.textContent = "79% (เนื้อหนามาก)";
         estPriceEl.textContent = `${(maxAA - 1.5).toFixed(1)} - ${maxAA.toFixed(1)}`;
     } else if (grade === "a") {
-        gradeTitle.textContent = "เกรดแนะนำ: A";
+        gradeTitle.textContent = "เกรดแนะนำ: A" + userLabel;
         metricSize.textContent = "2.65 ซม.";
         metricSkin.textContent = "90% (สม่ำเสมอ)";
         metricFlesh.textContent = "74% (เนื้อปานกลาง)";
         estPriceEl.textContent = `${(maxA - 1.5).toFixed(1)} - ${maxA.toFixed(1)}`;
     } else if (grade === "b") {
-        gradeTitle.textContent = "เกรดแนะนำ: B";
+        gradeTitle.textContent = "เกรดแนะนำ: B" + userLabel;
         metricSize.textContent = "2.35 ซม.";
         metricSkin.textContent = "81% (มีตำหนิเล็กน้อย)";
         metricFlesh.textContent = "69% (เนื้อค่อนข้างบาง)";
         estPriceEl.textContent = `${(maxB - 1.0).toFixed(1)} - ${maxB.toFixed(1)}`;
     } else if (grade === "c") {
-        gradeTitle.textContent = "เกรดแนะนำ: C";
+        gradeTitle.textContent = "เกรดแนะนำ: C" + userLabel;
         metricSize.textContent = "2.05 ซม.";
         metricSkin.textContent = "63% (ผิวคล้ำ/แตกกระจัดกระจาย)";
         metricFlesh.textContent = "58% (ผลลีบเนื้อบาง)";

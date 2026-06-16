@@ -844,6 +844,28 @@ body {
     letter-spacing: 0.5px;
 }
 
+/* Upload Source Section */
+.upload-source-section {
+    margin-bottom: 16px;
+}
+
+.upload-buttons-container {
+    display: flex;
+    gap: 12px;
+}
+
+.upload-buttons-container .btn {
+    flex: 1;
+    font-size: 13px;
+    padding: 12px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
 /* Demo Image Selectors */
 .demo-selector-section {
     margin-bottom: 16px;
