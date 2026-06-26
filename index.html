@@ -30,7 +30,7 @@
         <header class="app-header">
             <div class="header-main">
                 <div class="logo-area">
-                    <div class="logo-icon">
+                    <div class="logo-icon" id="secret-globe-toggle">
                         <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                         </svg>
@@ -248,7 +248,7 @@
                         </div>
                         
                         <div class="result-body">
-                            <div class="result-metrics">
+                            <div class="result-metrics" id="result-metrics">
                                 <div class="metric-item">
                                     <span class="metric-label">ขนาดผลเฉลี่ย</span>
                                     <span class="metric-value" id="metric-size">2.95 ซม.</span>
@@ -263,13 +263,28 @@
                                 </div>
                             </div>
                             
-                            <div class="price-estimate-box">
+                            <div class="price-estimate-box" id="price-estimate-box">
                                 <div class="est-label">ราคากลางคาดการณ์วันนี้:</div>
                                 <div class="est-price"><span id="result-est-price">32-34</span> บาท/กก.</div>
                                 <p class="est-note">*อิงตามราคาสูงสุดของล้งที่ใกล้เคียงคุณ</p>
                             </div>
+
+                            <!-- AI defect & grading reason analysis card -->
+                            <div class="analysis-explanation-card">
+                                <div class="explanation-header">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                    <h4>วิเคราะห์จุดตำหนิ & เหตุผลจัดเกรด</h4>
+                                </div>
+                                <p id="result-explanation-text" class="explanation-text">
+                                    กำลังรวบรวมรายละเอียดตำหนิและเหตุผลการจัดเกรด...
+                                </p>
+                            </div>
                             
-                            <div class="result-actions">
+                            <div class="result-actions" id="result-actions">
                                 <button id="btn-find-best-deal" class="btn btn-primary btn-block">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                                         <circle cx="11" cy="11" r="8"></circle>

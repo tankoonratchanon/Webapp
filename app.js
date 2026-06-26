@@ -2,6 +2,90 @@
 // MOCK DATABASE & CONSTANTS
 // ============================================================================
 
+// คลังคำวิเคราะห์สุ่มเกรดและจุดตำหนิเพื่อความสมจริง ( GRADE_REASON_VARIATIONS )
+const GRADE_REASON_VARIATIONS = {
+    aa: [
+        {
+            size: "2.92 ซม.",
+            skin: "96% (ผลตึงสวย)",
+            flesh: "79% (เนื้อหนามาก)",
+            explanation: `ลำไยล็อตนี้มี <span class="ok-success">ผลขนาดใหญ่เฉลี่ย 2.92 ซม.</span> ซึ่งจัดว่าได้มาตรฐานเกรดพรีเมียม (AA) ผลกลมโตสม่ำเสมอดีมาก เปลือกมีสีทองนวลสะดุดตา <span class="ok-success">ไม่มีจุดตำหนิหรือรอยโรคใดๆ บนผิว</span> (พบน้อยกว่า 2%) ผิวตึงสวยไม่ช้ำ อัตราเนื้อหนาแน่นสูงถึง 79% เหมาะสำหรับส่งออกหรือขายให้ได้ราคาแพงที่สุดครับ`
+        },
+        {
+            size: "2.94 ซม.",
+            skin: "97% (เปลือกสะอาดทองนวล)",
+            flesh: "80% (เนื้อแน่นแห้งกรอบ)",
+            explanation: `วิเคราะห์พบ <span class="ok-success">ขนาดผลเฉลี่ยใหญ่พิเศษ 2.94 ซม.</span> ผ่านเกณฑ์เกรดสูงสุด (AA) อย่างยอดเยี่ยม โครงสร้างเปลือกมีความแข็งแรง <span class="ok-success">ไร้รอยช้ำและไม่มีอาการผลแตกช้ำ</span> สภาพผิวเปลือกสะอาดหมดจด อัตราเนื้อหนาเต่งตึง เหมาะสำหรับบรรจุตู้คอนเทนเนอร์ส่งออกทางไกลครับ`
+        },
+        {
+            size: "2.90 ซม.",
+            skin: "95% (ผิวตึง ไร้ตำหนิ)",
+            flesh: "78% (เนื้อสีขาวใสหนาแน่น)",
+            explanation: `ผลผลิตมี <span class="ok-success">ขนาดสม่ำเสมอดีมากเฉลี่ย 2.90 ซม.</span> จัดอยู่ในกลุ่มเกรด AA เปลือกสีสว่างสวยนวล <span class="ok-success">ไม่พบอาการผิวลายมังกรหรือจุดช้ำเสียหายบนผิวเปลือก</span> (พบจุดตำหนิจุดจิ๋วไม่เกิน 3% ของผิว) เปอร์เซ็นต์เนื้อสูงและรสหวานจัด คัดส่งตู้ผลไม้สดเกรดสูงสุดได้ทันทีครับ`
+        }
+    ],
+    a: [
+        {
+            size: "2.65 ซม.",
+            skin: "90% (สม่ำเสมอ)",
+            flesh: "74% (เนื้อปานกลาง)",
+            explanation: `ลำไยล็อตนี้มี <span class="ok-success">ผลขนาดมาตรฐาน 2.65 ซม.</span> ซึ่งตรงตามเกณฑ์ของเกรด A ผลมีความกลมและขนาดสมดุลกันเป็นส่วนใหญ่ <span class="ok-success">ผิวเปลือกมีความสม่ำเสมอดี</span> แต่อาจพบ <span class="defect-warning">รอยด่างหรือจุดกระสีน้ำตาลเล็กน้อยประมาณ 5-10% ของผลทั้งหมด</span> ซึ่งไม่ส่งผลเสียต่อคุณภาพเนื้อลำไยด้านใน โดยรวมจัดเป็นผลผลิตคุณภาพดีตามมาตรฐานตลาดครับ`
+        },
+        {
+            size: "2.70 ซม.",
+            skin: "89% (พบจุดด่างประปราย)",
+            flesh: "75% (เนื้อสัมผัสดีฉ่ำน้ำ)",
+            explanation: `ตรวจวัด <span class="ok-success">ขนาดผลลำไยเฉลี่ยได้ 2.70 ซม.</span> ผ่านมาตรฐานเข้าสู่เกรด A ได้สมบูรณ์ คุณภาพเปลือกมีความเหนียวแข็งแรงดี <span class="defect-warning">พบรอยกระจุดสีเข้มกระจายตัวบางๆ ราว 7% บนเปลือกนอก</span> แต่โครงสร้างเนื้อและรสชาติหวานฉ่ำยังอยู่ในเกณฑ์ดีเยี่ยม สามารถส่งล้งคัดขายเกรด A เพื่อตลาดสดในประเทศได้ครับ`
+        },
+        {
+            size: "2.62 ซม.",
+            skin: "91% (ผิวค่อนข้างเรียบ)",
+            flesh: "73% (เนื้อหนาได้เกณฑ์)",
+            explanation: `ผลมี <span class="ok-success">ขนาดเฉลี่ย 2.62 ซม.</span> อยู่ในขอบเขตมาตรฐานเกรด A ผิวส่วนใหญ่กลมและเรียบตึงดี <span class="defect-warning">มีรอยลายกิ่งไม้ข่วนจางๆ บนผิวเปลือกเล็กน้อย (ไม่เกิน 6%)</span> รสชาติดี มีปริมาณน้ำตาลสูง อัตราเนื้อหนาแน่นอยู่ในเกณฑ์มาตรฐานขายได้ราคากลางปกติครับ`
+        }
+    ],
+    b: [
+        {
+            size: "2.35 ซม.",
+            skin: "81% (มีตำหนิเล็กน้อย)",
+            flesh: "69% (เนื้อค่อนข้างบาง)",
+            explanation: `ลำไยล็อตนี้ได้เกรด B เนื่องจากมี <span class="defect-warning">ขนาดผลเฉลี่ยอยู่ที่ 2.35 ซม.</span> ซึ่งค่อนข้างเล็กคละกันและไม่ถึงเกณฑ์เกรด A ในด้านผิวพบ <span class="defect-alert">รอยลายกระ รอยช้ำ หรือจุดสีน้ำตาลเข้มประมาณ 15-20% บนผิวของผลผลิต</span> และพบผลลีบเปลือกหนาบางส่วน ส่งผลให้อัตราเนื้อผลเฉลี่ยค่อนข้างบางลงมาอยู่ที่ 69% แต่ยังสามารถส่งขายเข้าโรงงานแปรรูปหรือขายตลาดทั่วไปได้ครับ`
+        },
+        {
+            size: "2.40 ซม.",
+            skin: "78% (ผิวมีรอยช้ำและจุดลาย)",
+            flesh: "68% (เนื้อปานกลางค่อนไปทางบาง)",
+            explanation: `ผลผลิตเฉลี่ย <span class="defect-warning">ขนาดผลอยู่ที่ 2.40 ซม.</span> จัดอยู่ในเกณฑ์เกรด B ลักษณะทางกายภาพภายนอก <span class="defect-alert">พบผิวเปลือกเป็นลายและมีรอยด่างจุดดำสะสมปานกลาง (ร้อยละ 18 ของผิว)</span> บางผลเริ่มมีเปลือกนิ่มยุบตัวเนื่องจากผ่านการเก็บไว้นานเกินไป เปอร์เซ็นต์เนื้ออยู่ในระดับกลางๆ แนะนำให้นำส่งล้งเพื่อนำไปอบแห้งหรือทำลำไยกระป๋องครับ`
+        },
+        {
+            size: "2.30 ซม.",
+            skin: "83% (พบรอยโรคพืชเล็กน้อย)",
+            flesh: "70% (เนื้อค่อนข้างเกาะแน่น)",
+            explanation: `วิเคราะห์พบ <span class="defect-warning">ขนาดผลเฉลี่ยเล็ก 2.30 ซม.</span> ร่วงลงมาอยู่ระดับเกรด B มีผลคละขนาดปนกันเยอะ สภาพผิวเปลือก <span class="defect-alert">มีจุดดำสะสมและคราบรอยโรคพืชเล็กน้อยประมาณ 14% ของจำนวนผล</span> ผิวเปลือกบางส่วนดูหมองคล้ำ แต่เนื้อลำไยยังดีไม่เสีย รสชาติหวานปานกลาง เหมาะสำหรับแปรรูปเชิงอุตสาหกรรมครับ`
+        }
+    ],
+    c: [
+        {
+            size: "2.05 ซม.",
+            skin: "63% (ผิวคล้ำ/แตกกระจัดกระจาย)",
+            flesh: "58% (ผลลีบเนื้อบาง)",
+            explanation: `ลำไยล็อตนี้ถูกจัดอยู่ในเกรด C เนื่องจากมี <span class="defect-alert">ขนาดผลเล็กเฉลี่ยเพียง 2.05 ซม.</span> นอกจากนี้ยังพบ <span class="defect-alert">จุดตำหนิรุนแรง เช่น ผิวตกสะเก็ด ลายมังกรเข้ม หรือรอยแตกช้ำแตกกิ่งมากถึง 35-40% ของผิวผล</span> ซึ่งเป็นจุดตำหนิหลักที่ทำให้ล้งคัดตกเกรด อัตราส่วนเนื้อต่ำและมีผลร่วงปนมาค่อนข้างมาก แนะนำให้รีบขายเพื่อแปรรูปหรือทำลำไยอบแห้งครับ`
+        },
+        {
+            size: "2.10 ซม.",
+            skin: "60% (พบรอยลายมังกรหนาแน่น)",
+            flesh: "55% (ผลเนื้อลีบแบน)",
+            explanation: `ผลผลิตมี <span class="defect-alert">ขนาดเล็กเฉลี่ย 2.10 ซม.</span> จัดอยู่ในเกรดต่ำสุด (เกรด C) สภาพเปลือกเสียหายชัดเจน <span class="defect-alert">พบอาการผิวลายมังกรเป็นทางยาวและรอยแตกเปลือกปริถึง 42%</span> ทำให้เนื้อข้างในบางผลสัมผัสกับอากาศและดินจนมีสีคล้ำ สัดส่วนเนื้อค่อนข้างลีบแบนและมีปริมาณร่วงเยอะมาก ล้งจะรับซื้อเฉพาะการนำไปอบแห้งรมควันเท่านั้นครับ`
+        },
+        {
+            size: "2.00 ซม.",
+            skin: "65% (เปลือกสีดำช้ำเสียหาย)",
+            flesh: "56% (อัตราเนื้อน้อยสุด)",
+            explanation: `วิเคราะห์ภาพพบ <span class="defect-alert">ขนาดผลเล็กสุดขีดเฉลี่ย 2.00 ซม.</span> ได้เกรด C สภาพภายนอกผลลีบและแบนไม่สมบูรณ์ <span class="defect-alert">ผิวเปลือกมีสีดำหมองคล้ำและพบรอยเน่าช้ำ/ราดำกระจายเกือบครึ่งผล (45%)</span> มีผลแตกค้างจำนวนมาก ไม่สามารถเก็บค้างหรือบรรจุสดได้ แนะนำส่งขายโรงงานอบแห้งสีทองโดยด่วนเพื่อลดการสูญเสียครับ`
+        }
+    ]
+};
+
 // Farmer Reference Location (Center of Makham Luang subdistrict)
 const FARMER_COORDS = { lat: 18.6186, lng: 98.8893 };
 
@@ -106,6 +190,9 @@ let priceChart = null;
 let currentForecastGrade = "AA";
 let loggedInLhong = null;
 
+// สถานะการตรวจพบลำไยลับ (Secret State Toggle)
+let isLonganDetectedMode = true;
+
 // ============================================================================
 // APP INITIALIZATION
 // ============================================================================
@@ -116,10 +203,32 @@ document.addEventListener("DOMContentLoaded", () => {
     initScannerTab();
     initForecastTab();
     initLhongPortalTab();
+    initSecretToggle();
     
     // Auto-login helper if PIN stored (optional, skip for demo)
     updateBroadcastBanner();
 });
+
+// ฟังก์ชันตั้งค่าเพิ่มเติมให้โลโก้รูปโลกมุมบนซ้าย
+function initSecretToggle() {
+    const globe = document.getElementById("secret-globe-toggle");
+    if (globe) {
+        globe.style.cursor = "default"; // ไม่ให้มีเคอร์เซอร์แบบมือเพื่อให้แนบเนียน
+    }
+}
+
+// ฟังก์ชันเปิด-ปิดโหมดตรวจจับลับ และกลับด้านรูปโลก
+function toggleSecretMode() {
+    isLonganDetectedMode = !isLonganDetectedMode;
+    const globe = document.getElementById("secret-globe-toggle");
+    if (globe) {
+        if (isLonganDetectedMode) {
+            globe.style.transform = "none";
+        } else {
+            globe.style.transform = "scaleX(-1)";
+        }
+    }
+}
 
 // ============================================================================
 // TAB NAVIGATION
@@ -129,7 +238,13 @@ function initTabNavigation() {
     navItems.forEach(item => {
         item.addEventListener("click", () => {
             const targetTab = item.getAttribute("data-tab");
-            switchTab(targetTab);
+            
+            // หากแตะเมนู "AI คัดเกรด" ซ้ำขณะอยู่หน้านั้นอยู่แล้ว -> สลับโหมดลับ!
+            if (targetTab === "scanner" && activeTab === "scanner") {
+                toggleSecretMode();
+            } else {
+                switchTab(targetTab);
+            }
         });
     });
 }
@@ -683,48 +798,72 @@ function showScannerResults(grade, isUserUploaded = false) {
     const metricSkin = document.getElementById("metric-skin");
     const metricFlesh = document.getElementById("metric-flesh");
     const estPriceEl = document.getElementById("result-est-price");
+    const explanationText = document.getElementById("result-explanation-text");
     
-    // Get highest price for each grade in market currently
-    const openLhongs = lhongs.filter(l => l.status === "open");
-    let maxAA = 33.0, maxA = 25.0, maxB = 15.0, maxC = 6.0;
-    
-    if (openLhongs.length > 0) {
-        maxAA = Math.max(...openLhongs.map(l => l.prices.AA));
-        maxA = Math.max(...openLhongs.map(l => l.prices.A));
-        maxB = Math.max(...openLhongs.map(l => l.prices.B));
-        maxC = Math.max(...openLhongs.map(l => l.prices.C));
-    }
+    // Elements to hide/show during mode switches
+    const resultMetrics = document.getElementById("result-metrics");
+    const priceEstimateBox = document.getElementById("price-estimate-box");
+    const resultActions = document.getElementById("result-actions");
+    const resultBadge = document.querySelector(".result-badge");
 
     resultPanel.classList.remove("hidden");
     
     const userLabel = isUserUploaded ? " (ภาพของคุณ)" : "";
-    const badgeText = isUserUploaded ? "วิเคราะห์รูปภาพของคุณเสร็จสมบูรณ์" : "ผลลัพธ์การคัดเกรดโดย AI";
-    document.querySelector(".result-badge").textContent = badgeText;
-    
-    if (grade === "aa") {
-        gradeTitle.textContent = "เกรดแนะนำ: AA" + userLabel;
-        metricSize.textContent = "2.92 ซม.";
-        metricSkin.textContent = "96% (ผลตึงสวย)";
-        metricFlesh.textContent = "79% (เนื้อหนามาก)";
-        estPriceEl.textContent = `${(maxAA - 1.5).toFixed(1)} - ${maxAA.toFixed(1)}`;
-    } else if (grade === "a") {
-        gradeTitle.textContent = "เกรดแนะนำ: A" + userLabel;
-        metricSize.textContent = "2.65 ซม.";
-        metricSkin.textContent = "90% (สม่ำเสมอ)";
-        metricFlesh.textContent = "74% (เนื้อปานกลาง)";
-        estPriceEl.textContent = `${(maxA - 1.5).toFixed(1)} - ${maxA.toFixed(1)}`;
-    } else if (grade === "b") {
-        gradeTitle.textContent = "เกรดแนะนำ: B" + userLabel;
-        metricSize.textContent = "2.35 ซม.";
-        metricSkin.textContent = "81% (มีตำหนิเล็กน้อย)";
-        metricFlesh.textContent = "69% (เนื้อค่อนข้างบาง)";
-        estPriceEl.textContent = `${(maxB - 1.0).toFixed(1)} - ${maxB.toFixed(1)}`;
-    } else if (grade === "c") {
-        gradeTitle.textContent = "เกรดแนะนำ: C" + userLabel;
-        metricSize.textContent = "2.05 ซม.";
-        metricSkin.textContent = "63% (ผิวคล้ำ/แตกกระจัดกระจาย)";
-        metricFlesh.textContent = "58% (ผลลีบเนื้อบาง)";
-        estPriceEl.textContent = `${(maxC - 1.0).toFixed(1)} - ${maxC.toFixed(1)}`;
+
+    if (!isLonganDetectedMode) {
+        // Mode: No Longan Detected
+        resultBadge.textContent = "การวิเคราะห์ผลผลิตล้มเหลว";
+        gradeTitle.textContent = "❌ ไม่ตรวจพบลำไยในรูปภาพ";
+        
+        // Hide metrics, price, and actions
+        if (resultMetrics) resultMetrics.classList.add("hidden");
+        if (priceEstimateBox) priceEstimateBox.classList.add("hidden");
+        if (resultActions) resultActions.classList.add("hidden");
+        
+        // Show friendly error explanation
+        explanationText.innerHTML = `คำแนะนำ: ระบบปัญญาประดิษฐ์ตรวจสอบไม่พบผลลำไยในรูปภาพที่ส่งเข้ามาวิเคราะห์ กรุณาตรวจสอบว่ารูปภาพของคุณเป็นผลลำไยจริงหรือไม่ และถ่ายภาพในที่ที่มีแสงสว่างเพียงพอ โดยถือกล้องระยะใกล้พอเหมาะและหลีกเลี่ยงไม่ให้มีใบไม้หรือวัตถุอื่นบดบังผลลำไย เพื่อให้ระบบสามารถสแกนคัดเกรดได้ครับ`;
+    } else {
+        // Mode: Normal Grading (Restore layout elements if hidden)
+        if (resultMetrics) resultMetrics.classList.remove("hidden");
+        if (priceEstimateBox) priceEstimateBox.classList.remove("hidden");
+        if (resultActions) resultActions.classList.remove("hidden");
+
+        const badgeText = isUserUploaded ? "วิเคราะห์รูปภาพของคุณเสร็จสมบูรณ์" : "ผลลัพธ์การคัดเกรดโดย AI";
+        resultBadge.textContent = badgeText;
+        
+        // Pick a random variation from the variations database
+        const gradeKey = grade.toLowerCase();
+        const variations = GRADE_REASON_VARIATIONS[gradeKey] || GRADE_REASON_VARIATIONS["a"];
+        const randomIndex = Math.floor(Math.random() * variations.length);
+        const selectedVar = variations[randomIndex];
+
+        // Get highest price for each grade in market currently
+        const openLhongs = lhongs.filter(l => l.status === "open");
+        let maxAA = 33.0, maxA = 25.0, maxB = 15.0, maxC = 6.0;
+        
+        if (openLhongs.length > 0) {
+            maxAA = Math.max(...openLhongs.map(l => l.prices.AA));
+            maxA = Math.max(...openLhongs.map(l => l.prices.A));
+            maxB = Math.max(...openLhongs.map(l => l.prices.B));
+            maxC = Math.max(...openLhongs.map(l => l.prices.C));
+        }
+
+        gradeTitle.textContent = "เกรดแนะนำ: " + grade.toUpperCase() + userLabel;
+        metricSize.textContent = selectedVar.size;
+        metricSkin.textContent = selectedVar.skin;
+        metricFlesh.textContent = selectedVar.flesh;
+        explanationText.innerHTML = selectedVar.explanation;
+
+        // Populate price estimate based on grade
+        if (gradeKey === "aa") {
+            estPriceEl.textContent = `${(maxAA - 1.5).toFixed(1)} - ${maxAA.toFixed(1)}`;
+        } else if (gradeKey === "a") {
+            estPriceEl.textContent = `${(maxA - 1.5).toFixed(1)} - ${maxA.toFixed(1)}`;
+        } else if (gradeKey === "b") {
+            estPriceEl.textContent = `${(maxB - 1.0).toFixed(1)} - ${maxB.toFixed(1)}`;
+        } else if (gradeKey === "c") {
+            estPriceEl.textContent = `${(maxC - 1.0).toFixed(1)} - ${maxC.toFixed(1)}`;
+        }
     }
     
     // Smooth scroll down to result card

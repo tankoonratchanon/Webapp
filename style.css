@@ -1001,6 +1001,57 @@ body {
     color: var(--text-secondary);
 }
 
+.analysis-explanation-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.explanation-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    color: var(--accent-color);
+}
+
+.explanation-header svg {
+    flex-shrink: 0;
+}
+
+.explanation-header h4 {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.explanation-text {
+    font-size: 12px;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.explanation-text .highlight-text {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.explanation-text .defect-alert {
+    color: var(--red-color);
+    font-weight: 600;
+}
+
+.explanation-text .defect-warning {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.explanation-text .ok-success {
+    color: var(--green-color);
+    font-weight: 600;
+}
+
 /* ----------------------------------------------------
    AI FORECAST TAB
    ---------------------------------------------------- */
